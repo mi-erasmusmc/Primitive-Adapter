@@ -1,0 +1,7 @@
+ALTER TABLE index_compound_study ADD CONSTRAINT `index_compound_study_ibfk_1` FOREIGN KEY (`compound_id`) REFERENCES `index_compound` (`id`); 
+ALTER TABLE index_compound_study ADD CONSTRAINT `index_compound_study_ibfk_2` FOREIGN KEY (`study_id`) REFERENCES `index_study` (`id`); 
+ALTER TABLE index_compound_study ADD CONSTRAINT `index_compound_study_ibfk_1` FOREIGN KEY (`index_compound_id`) REFERENCES `index_compound` (`id`); ALTER TABLE index_compound_study ADD CONSTRAINT `index_compound_study_ibfk_2` FOREIGN KEY (`index_study_id`) REFERENCES `index_study` (`id`); 
+
+ALTER TABLE index_finding ADD CONSTRAINT `index_finding_ibfk_1` FOREIGN KEY (`compound_id`) REFERENCES `index_compound` (`id`); 
+ALTER TABLE index_finding ADD CONSTRAINT `index_finding_ibfk_2` FOREIGN KEY (`study_id`) REFERENCES `index_study` (`id`); 
+ALTER TABLE index_finding ADD INDEX FINDING_IDENTIFIER (finding_identifier); ALTER TABLE index_finding ADD INDEX FINDING_TYPE (finding_type); 

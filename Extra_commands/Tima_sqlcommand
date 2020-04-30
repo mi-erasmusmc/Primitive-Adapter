@@ -1,0 +1,34 @@
+UPDATE index_findings iff
+
+INNER JOIN faers f on f.MeddraID = iff.finding_identifier
+
+INNER JOIN index_compound ic on f.RxNormID = ic.compound_identifier
+
+SET iff.compound_id = ic.id 
+WHERE iff.id<200000
+
+
+
+
+
+
+Insert into index_finding_new
+(compound_id, study_id)
+
+SELECT ics.index_study_id , ics.index_compound_id 
+From faers f
+INNER JOIN index_study iss on iss.study_identifier = f.CombinedID
+INNER JOIN index_compound ic on ic.compound_identifier= f.RxNormID
+INNER JOIN index_compound_study ics on ics.index_compound_id = ic.id and ics.index_study_id = iss.id
+
+
+---------------------------------------------------------------------------------------------------
+
+
+UPDATE index_findings
+set (compound_id=  ics.index_compound_id , study_id=ics.index_study_id)
+
+From faers f
+INNER JOIN index_study iss on iss.study_identifier = f.CombinedID
+INNER JOIN index_compound ic on ic.compound_identifier= f.RxNormID
+INNER JOIN index_compound_study ics on ics.index_compound_id = ic.id and ics.index_study_id = iss.id

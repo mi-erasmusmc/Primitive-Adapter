@@ -1,0 +1,29 @@
+Insert into index_findings
+(finding_identifier,specimen_organ,specimen_organ_code,specimen_organ_vocabulary,finding,finding_code,finding_vocabulary,severity, finding_type, CombinedID,RxNormID)
+							 						
+SELECT
+MeddraID, MeddraSocLabel, MeddraSocID, "MedDRA", MeddraLabel,MeddraID , "MedDRA", casecount, "Adverse event",CombinedID, RxNormID
+From faers 
+-------------------------------------------------------------------------
+UPDATE index_findings
+INNER JOIN index_study ON index_findings.CombinedID = index_study.study_identifier
+SET index_findings.study_id = index_study.id;
+
+
+---------------------------------------------
+
+UPDATE index_findings
+INNER JOIN index_compound ON index_findings.RxNormID = index_compound.compound_identifier
+SET index_findings.compound_id = index_compound.id;
+
+-----------------------------------
+Insert into index_findings
+(finding_identifier,specimen_organ,specimen_organ_code,specimen_organ_vocabulary,finding,finding_code,finding_vocabulary,severity, finding_type, NCT,RxNormID)
+							 						
+SELECT
+MeddraID, MeddraSocLabel, MeddraSocID, "MedDRA", MeddraLabel,MeddraID , "MedDRA", casecount, "Adverse event",NCT, RxNormID
+From clinicaltrials
+
+-------------------------------------------------------------------------------
+
+UPDATE index_findings set treatment_related="1"

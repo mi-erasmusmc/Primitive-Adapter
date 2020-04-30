@@ -1,0 +1,75 @@
+INSERT IGNORE INTO
+  index_compoundnew 
+  (compound_identifier, name, inchikey, smiles) 
+  SELECT DISTINCT
+    compound_identifier,
+    name,
+    inchikey,
+    smiles
+  FROM
+    faers180619.index_compound;
+
+_
+
+
+
+INSERT INTO index_compound_studyss ( 
+      index_compound_id, 
+      index_study_id ) 
+SELECT RxNormID, 
+       CombinedID
+FROM faers180619.faers
+
+
+
+INSERT IGNORE INTO
+  index_compound_study 
+  (index_study_id) 
+  SELECT DISTINCT
+    id
+  FROM
+    clinicaltrials180619.index_study
+
+
+
+
+INSERT INTO index_compound_study ( 
+      index_compound_id ) 
+SELECT id
+FROM clinicaltrials180619.index_compound;
+
+
+
+
+INSERT IGNORE INTO
+index_compound_study(
+index_study_id, index_compound_id)
+SELECT clinicaltrials180619.index_study.id,
+clinicaltrials180619.index_compound.id
+FROM
+ clinicaltrials180619.index_study, clinicaltrials180619.index_compound;
+
+
+
+
+
+
+
+
+UPDATE clinicaltrials180619.index_compound_study A
+SET EMPLOYEE_ID =
+  (SELECT EMPLOYEE_ID
+   FROM TableB B
+   WHERE B.First_name = A.First_name
+   AND B.Last_name = A.Last_name)
+
+
+
+
+
+
+
+INSERT INTO clinicaltrials180619.index_compound_study(NCT,index_study_id) SELECT NCT, study_identifier FROM clinicaltrials180619.index_study;
+
+
+

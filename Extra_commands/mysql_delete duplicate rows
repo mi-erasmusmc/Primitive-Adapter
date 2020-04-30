@@ -1,0 +1,39 @@
+select min(id), name 
+        from index_compoundss
+       group by name
+      having count(*) > 1;
+
+
+
+DELETE a FROM clinicaltrials180619.index_compoundss a
+  INNER JOIN clincialtrials180619.index_compoundss a2
+WHERE a.id < a2.id
+AND   a.name = a2.name;
+
+
+
+
+UPDATE clinicaltrials180619.index_compoundss AS t1
+INNER JOIN clincialtrials180619.index_compound AS t2 ON t1.name = t2.name
+SET t1.name = t2.name;
+
+
+
+
+
+DELETE `a`
+FROM
+    faers180619.index_compoundss AS `a`,
+    faers180619.index_compoundss AS `b`
+WHERE
+    -- IMPORTANT: Ensures one version remains
+    -- Change "ID" to your unique column's name
+    `a`.`id` < `b`.`id`
+
+    -- Any duplicates you want to check for
+    AND `a`.`name` <=> `b`.`name`;
+
+select distinct name, coiunt from table_name
+
+
+

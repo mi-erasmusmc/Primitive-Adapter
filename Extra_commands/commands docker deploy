@@ -1,0 +1,6 @@
+sudo docker build -t dockerhub.etransafe.eu:5111/wp9/emc/clinicaltrials-pa:latest .
+
+
+sudo docker push dockerhub.etransafe.eu:5111/wp9/emc/clinicaltrials-pa:latest
+
+
