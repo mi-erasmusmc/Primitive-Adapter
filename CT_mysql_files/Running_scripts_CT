@@ -1,0 +1,63 @@
+INSERT INTO index_compound( compound_identifier, name) SELECT RxNormID, RxNormLabel FROM clinicaltrials;
+
+
+--------------------------------------------------
+
+ alter table index_compound_study add COLUMN NCT varchar(256);
+alter table index_compound_study add COLUMN RxNormID varchar(256);
+
+insert into index_compound_study (NCT, RxNormID) SELECT DISTINCT NCT, RxNormID from clinicaltrials;
+
+ 
+UPDATE index_compound_study
+INNER JOIN index_study ON index_compound_study.NCT = index_study.study_identifier
+SET index_compound_study.index_study_id = index_study.id
+
+ 
+UPDATE index_compound_study
+INNER JOIN index_compound ON index_compound_study.RxNormID = index_compound.compound_identifier
+SET index_compound_study.index_compound_id = index_compound.id
+
+ 
+ALTER TABLE index_compound_study DROP COLUMN RxNormID;
+ALTER TABLE index_compound_study DROP COLUMN NCT
+
+--------------------------------------------------
+
+INSERT INTO index_study(study_identifier) SELECT NCT FROM clinicaltrials;
+
+DELETE FROM index_study;
+INSERT into index_study (study_identifier) SELECT DISTINCT medline.CombinedID FROM medline;
+
+-------------------------------------------------
+
+Insert into index_finding
+(finding_identifier,specimen_organ,specimen_organ_code,specimen_organ_vocabulary,finding,finding_code,finding_vocabulary,severity, finding_type, NCT,RxNormID)
+                                                     
+SELECT
+MeddraID, MeddraSocLabel, MeddraSocID, "MedDRA", MeddraLabel,MeddraID , "MedDRA", casecount, "Adverse event",NCT, RxNormID
+From clinicaltrials
+
+
+
+UPDATE index_finding set treatment_related="1"
+
+UPDATE index_study set species="Human"
+
+
+----------------------------------------------------
+
+UPDATE index_finding
+INNER JOIN index_compound ON index_finding.RxNormID = index_compound.compound_identifier
+SET index_finding.compound_id = index_compound.id;
+
+----------------------------------------------------
+
+UPDATE index_finding
+INNER JOIN index_study ON index_finding.CombinedID = index_study.study_identifier
+SET index_finding.study_id = index_study.id;
+
+------------------------
+
+
+
