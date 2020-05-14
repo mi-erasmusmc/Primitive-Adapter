@@ -1,0 +1,79 @@
+package oban;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+import com.univocity.parsers.tsv.TsvParser;
+import com.univocity.parsers.tsv.TsvParserSettings;
+
+public class SmilesInchikey {
+
+	private static final String FILE_NAME = "/home/nikhita/clinical_rxnorm_name2structure.tsv";
+
+	public static void main(String[] args) {
+		TsvParserSettings settings = new TsvParserSettings();
+		TsvParser parser = new TsvParser(settings);
+
+		try {
+			List<String[]> allRows = parser.parseAll(new FileReader(FILE_NAME));
+
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				Connection connect = DriverManager
+						.getConnection("jdbc:mysql://127.0.0.1:3306/medline?"
+								+ "user=root&password=root" + "&serverTimezone=UTC");
+
+				String query = "update index_compounds set smiles = ? where inchikey = ?";
+				PreparedStatement preparedStmt = connect.prepareStatement(query);
+
+				// try with only one row first
+//				int i = 0;
+//				String[] row = allRows.get(i);
+//
+//				String inchikey = row[3];
+//				String smile = row[4];
+//
+//				if (inchikey != null && smile != null) {
+//					preparedStmt.setString(1, smile);
+//					preparedStmt.setString(2, inchikey);
+//					preparedStmt.execute();
+//				}
+
+				for (int i = 0; i < allRows.size(); i++) {
+					
+					String[] row = allRows.get(i);
+
+					String inchikey = row[3];
+					String smile = row[4];
+
+					if (inchikey != null && smile != null) {
+						preparedStmt.setString(1, smile);
+						preparedStmt.setString(2, inchikey);
+						preparedStmt.execute();
+					}
+				    System.out.println("Row number " + i + " done out of total " + allRows.size());
+				}
+
+				preparedStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+
